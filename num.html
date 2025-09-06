@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>संख्या पद्धति - Mock Test 1</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
+    header { background:#222; color:#fff; padding:15px; text-align:center; font-size:20px; }
+    .container { padding:20px; }
+    .timer { font-size:18px; color:red; margin-bottom:15px; }
+    .question-box { background:#fff; padding:15px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .options label { display:block; padding:8px; margin:6px 0; background:#eee; border-radius:5px; cursor:pointer; }
+    .options input { margin-right:8px; }
+    .nav-buttons { margin:15px 0; }
+    .nav-buttons button { padding:8px 14px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:#007bff; color:#fff; }
+    .nav-buttons button:hover { background:#0056b3; }
+    .result { font-size:18px; margin:15px 0; }
+    .submit-btn { background:#28a745; }
+    .home-btn { background:#ff9800; }
+    footer { text-align:center; padding:15px; margin-top:30px; font-size:14px; background:#eee; }
+  </style>
+</head>
+<body>
+
+<header>📘 संख्या पद्धति - Mock Test 1</header>
+
+<div class="container">
+  <div class="timer">⏳ Time Left: <span id="time">35:00</span></div>
+
+  <!-- Question Area -->
+  <div id="quiz"></div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button onclick="prevQuestion()">⬅ पिछला</button>
+    <button onclick="nextQuestion()">अगला ➡</button>
+  </div>
+
+  <!-- Submit & Home -->
+  <div class="nav-buttons">
+    <button class="submit-btn" onclick="submitQuiz()">✅ Submit</button>
+    <a href="index.html"><button class="home-btn">🏠 होम</button></a>
+  </div>
+
+  <div class="result" id="result"></div>
+</div>
+
+<footer>© 2025 • Math Mock Test</footer>
+
+<script>
+  // Timer (35 minutes)
+  let totalTime = 35 * 60;
+  let timerElement = document.getElementById("time");
+
+  function updateTimer() {
+    let minutes = Math.floor(totalTime / 60);
+    let seconds = totalTime % 60;
+    timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    if (totalTime > 0) {
+      totalTime--;
+    } else {
+      submitQuiz();
+    }
+  }
+  setInterval(updateTimer, 1000);
+
+  // Questions Array
+  const questions = [
+    {
+      question: "Q1: यहाँ पहला सवाल लिखें",
+      options: ["Option A", "Option B", "Option C", "Option D"],
+      correct: 0
+    },
+    {
+      question: "Q2: यहाँ दूसरा सवाल लिखें",
+      options: ["A", "B", "C", "D"],
+      correct: 2
+    }
+    // 👉 बाद में कुल 25 सवाल डालेंगे
+  ];
+
+  let currentQuestion = 0;
+  let userAnswers = new Array(questions.length).fill(null);
+
+  function showQuestion(index) {
+    let q = questions[index];
+    let quizDiv = document.getElementById("quiz");
+    quizDiv.innerHTML = `
+      <div class="question-box">
+        <h3>${index+1}. ${q.question}</h3>
+        <div class="options">
+          ${q.options.map((opt, i) => `
+            <label>
+              <input type="radio" name="q${index}" value="${i}" ${userAnswers[index] === i ? 'checked' : ''} 
+              onchange="userAnswers[${index}] = ${i}">
+              ${opt}
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      showQuestion(currentQuestion);
+    }
+  }
+
+  function prevQuestion() {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      showQuestion(currentQuestion);
+    }
+  }
+
+  function submitQuiz() {
+    let score = 0;
+    questions.forEach((q, i) => {
+      if (userAnswers[i] === q.correct) score++;
+    });
+    document.getElementById("result").textContent = `Result: ${score}/${questions.length}`;
+  }
+
+  // Load first question
+  showQuestion(currentQuestion);
+</script>
+
+</body>
+</html>
